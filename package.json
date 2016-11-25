@@ -1,0 +1,23 @@
+{
+  "name": "module-toolkit",
+  "version": "1.0.0",
+  "description": "module toolki",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pinkgorilla/module-toolkit.git"
+  },
+  "author": "Tris Setiawan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pinkgorilla/module-toolkit/issues"
+  },
+  "homepage": "https://github.com/pinkgorilla/module-toolkit#readme",
+  "dependencies": {
+    "mongodb": "^2.2.11",
+    "mongodb-toolkit": "git+https://github.com/pinkgorilla/mongodb-toolkit.git"
+  }
+}
