@@ -83,7 +83,7 @@ module.exports = class BaseManager {
         })
             .then((result) => {
                 return Promise.resolve(result.n === 1);
-            })
+            });
     }
 
     getSingleById(id) {
