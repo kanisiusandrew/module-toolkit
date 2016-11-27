@@ -35,29 +35,16 @@ module.exports = class BaseManager {
         }, paging);
         // var start = process.hrtime();
 
-        return new Promise((resolve, reject) => {
-            this._createIndexes()
-                .then((createIndexResults) => {
-                    var query = this._getQuery(_paging);
-                    this.collection
-                        .where(query)
-                        .select(_paging.select)
-                        .page(_paging.page, _paging.size)
-                        .order(_paging.order)
-                        .execute()
-                        .then((result) => {
-                            // var elapsed = process.hrtime(start);
-                            // console.log(elapsed);
-                            resolve(result);
-                        })
-                        .catch((e) => {
-                            reject(e);
-                        });
-                })
-                .catch((e) => {
-                    reject(e);
-                });
-        });
+        return this._createIndexes()
+            .then((createIndexResults) => {
+                var query = this._getQuery(_paging);
+                return this.collection
+                    .where(query)
+                    .select(_paging.select)
+                    .page(_paging.page, _paging.size)
+                    .order(_paging.order)
+                    .execute();
+            });
     }
 
     _pre(data) {
