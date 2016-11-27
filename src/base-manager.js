@@ -60,84 +60,39 @@ module.exports = class BaseManager {
         });
     }
 
+    _pre(data) {
+        return this._createIndexes()
+            .then((createIndexResults) => {
+                return this._validate(data);
+            });
+    }
 
     create(data) {
-        return new Promise((resolve, reject) => {
-            this._createIndexes()
-                .then((createIndexResults) => {
-                    this._validate(data)
-                        .then((validData) => {
-                            this.collection.insert(validData)
-                                .then((id) => {
-                                    resolve(id);
-                                })
-                                .catch((e) => {
-                                    reject(e);
-                                });
-                        })
-                        .catch((e) => {
-                            reject(e);
-                        });
-                })
-                .catch((e) => {
-                    reject(e);
-                });
-        });
+        return this._pre(data)
+            .then((validData) => {
+                return this.collection.insert(validData);
+            });
     }
 
     update(data) {
-        return new Promise((resolve, reject) => {
-            this._createIndexes()
-                .then((createIndexResults) => {
-                    this._validate(data)
-                        .then((validData) => {
-                            this.collection.update(validData)
-                                .then((id) => {
-                                    resolve(id);
-                                })
-                                .catch((e) => {
-                                    reject(e);
-                                });
-                        })
-                        .catch((e) => {
-                            reject(e);
-                        });
-                })
-                .catch((e) => {
-                    reject(e);
-                });
-        });
+        return this._pre(data)
+            .then((validData) => {
+                return this.collection.update(validData);
+            });
     }
 
     delete(data) {
-        return new Promise((resolve, reject) => {
-            this._createIndexes()
-                .then((createIndexResults) => {
-                    this._validate(data)
-                        .then((validData) => {
-                            validData._deleted = true;
-                            this.collection.update(validData)
-                                .then((id) => {
-                                    resolve(id);
-                                })
-                                .catch((e) => {
-                                    reject(e);
-                                });
-                        })
-                        .catch((e) => {
-                            reject(e);
-                        });
-                })
-                .catch((e) => {
-                    reject(e);
-                });
-        });
+        return this._pre(data)
+            .then((validData) => {
+                validData._deleted = true;
+                return this.collection.update(validData);
+            });
     }
 
     destroy(id) {
-
-        if (id === "")
+        if (!ObjectId.isValid(id)) {
             return Promise.resolve(null);
+        }
         else {
             return this.collection.deleteOne({
                 _id: id
@@ -153,64 +108,36 @@ module.exports = class BaseManager {
     }
 
     getSingleById(id) {
-        return new Promise((resolve, reject) => {
-            if (id === "")
-                resolve(null);
+        if (!ObjectId.isValid(id)) {
+            return Promise.resolve(null);
+        }
+        else {
             var query = {
                 _id: new ObjectId(id),
                 _deleted: false
             };
-            this.getSingleByQuery(query)
-                .then((data) => {
-                    resolve(data);
-                })
-                .catch((e) => {
-                    reject(e);
-                });
-        });
+            return this.getSingleByQuery(query);
+        }
     }
 
     getSingleByIdOrDefault(id) {
-        return new Promise((resolve, reject) => {
-            if (id === "")
-                resolve(null);
+        if (!ObjectId.isValid(id)) {
+            return Promise.resolve(null);
+        }
+        else {
             var query = {
                 _id: new ObjectId(id),
                 _deleted: false
             };
-            this.getSingleByQueryOrDefault(query)
-                .then((data) => {
-                    resolve(data);
-                })
-                .catch((e) => {
-                    reject(e);
-                });
-        });
+            return this.getSingleByQueryOrDefault(query);
+        }
     }
 
     getSingleByQuery(query) {
-        return new Promise((resolve, reject) => {
-            this.collection
-                .single(query)
-                .then((data) => {
-                    resolve(data);
-                })
-                .catch((e) => {
-                    reject(e);
-                });
-        });
+        return this.collection.single(query);
     }
 
     getSingleByQueryOrDefault(query) {
-        return new Promise((resolve, reject) => {
-            this.collection
-                .singleOrDefault(query)
-                .then((data) => {
-                    resolve(data);
-                })
-                .catch((e) => {
-                    reject(e);
-                });
-        });
+        return this.collection.singleOrDefault(query);
     }
 };
