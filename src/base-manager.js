@@ -77,47 +77,29 @@ module.exports = class BaseManager {
     }
 
     destroy(id) {
-        if (!ObjectId.isValid(id)) {
-            return Promise.resolve(null);
-        }
-        else {
-            return this.collection.deleteOne({
-                _id: id
+        return this.collection.deleteOne({
+            _id: ObjectId.isValid(id) ? new ObjectId(id) : {},
+            _deleted: false
+        })
+            .then((result) => {
+                return Promise.resolve(result.n === 1);
             })
-                .then((result) => {
-                    return result.n === 1;
-                })
-                .catch((e) => {
-
-                    throw e;
-                });
-        }
     }
 
     getSingleById(id) {
-        if (!ObjectId.isValid(id)) {
-            return Promise.resolve(null);
-        }
-        else {
-            var query = {
-                _id: new ObjectId(id),
-                _deleted: false
-            };
-            return this.getSingleByQuery(query);
-        }
+        var query = {
+            _id: ObjectId.isValid(id) ? new ObjectId(id) : {},
+            _deleted: false
+        };
+        return this.getSingleByQuery(query);
     }
 
     getSingleByIdOrDefault(id) {
-        if (!ObjectId.isValid(id)) {
-            return Promise.resolve(null);
-        }
-        else {
-            var query = {
-                _id: new ObjectId(id),
-                _deleted: false
-            };
-            return this.getSingleByQueryOrDefault(query);
-        }
+        var query = {
+            _id: ObjectId.isValid(id) ? new ObjectId(id) : {},
+            _deleted: false
+        };
+        return this.getSingleByQueryOrDefault(query);
     }
 
     getSingleByQuery(query) {
