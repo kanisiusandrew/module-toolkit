@@ -1,6 +1,6 @@
-'use strict'
+"use strict";
 // external deps
-var ObjectId = require('mongodb').ObjectId;
+var ObjectId = require("mongodb").ObjectId;
 require("mongodb-toolkit");
 
 module.exports = class BaseManager {
@@ -13,11 +13,11 @@ module.exports = class BaseManager {
     }
 
     _validate(data) {
-        throw new Error('_validate(data) not implemented');
+        throw new Error("_validate(data) not implemented");
     }
 
     _getQuery(paging) {
-        throw new Error('_getQuery(paging) not implemented');
+        throw new Error("_getQuery(paging) not implemented");
     }
 
     _createIndexes() {
@@ -36,182 +36,78 @@ module.exports = class BaseManager {
         }, paging);
         // var start = process.hrtime();
 
-        return new Promise((resolve, reject) => {
-            this._createIndexes()
-                .then((createIndexResults) => {
-                    var query = this._getQuery(_paging);
-                    this.collection
-                        .where(query)
-                        .select(_paging.select)
-                        .page(_paging.page, _paging.size)
-                        .order(_paging.order)
-                        .execute()
-                        .then(result => {
-                            // var elapsed = process.hrtime(start);
-                            // console.log(elapsed);
-                            resolve(result);
-                        })
-                        .catch(e => {
-                            reject(e);
-                        });
-                })
-                .catch(e => {
-                    reject(e);
-                });
-        });
+        return this._createIndexes()
+            .then((createIndexResults) => {
+                var query = this._getQuery(_paging);
+                return this.collection
+                    .where(query)
+                    .select(_paging.select)
+                    .page(_paging.page, _paging.size)
+                    .order(_paging.order)
+                    .execute();
+            });
     }
 
+    _pre(data) {
+        return this._createIndexes()
+            .then((createIndexResults) => {
+                return this._validate(data);
+            });
+    }
 
     create(data) {
-        return new Promise((resolve, reject) => {
-            this._createIndexes()
-                .then((createIndexResults) => {
-                    this._validate(data)
-                        .then(validData => {
-                            this.collection.insert(validData)
-                                .then(id => {
-                                    resolve(id);
-                                })
-                                .catch(e => {
-                                    reject(e);
-                                });
-                        })
-                        .catch(e => {
-                            reject(e);
-                        });
-                })
-                .catch(e => {
-                    reject(e);
-                });
-        });
+        return this._pre(data)
+            .then((validData) => {
+                return this.collection.insert(validData);
+            });
     }
 
     update(data) {
-        return new Promise((resolve, reject) => {
-            this._createIndexes()
-                .then((createIndexResults) => {
-                    this._validate(data)
-                        .then(validData => {
-                            this.collection.update(validData)
-                                .then(id => {
-                                    resolve(id);
-                                })
-                                .catch(e => {
-                                    reject(e);
-                                });
-                        })
-                        .catch(e => {
-                            reject(e);
-                        });
-                })
-                .catch(e => {
-                    reject(e);
-                });
-        });
+        return this._pre(data)
+            .then((validData) => {
+                return this.collection.update(validData);
+            });
     }
 
     delete(data) {
-        return new Promise((resolve, reject) => {
-            this._createIndexes()
-                .then((createIndexResults) => {
-                    this._validate(data)
-                        .then(validData => {
-                            validData._deleted = true;
-                            this.collection.update(validData)
-                                .then(id => {
-                                    resolve(id);
-                                })
-                                .catch(e => {
-                                    reject(e);
-                                });
-                        })
-                        .catch(e => {
-                            reject(e);
-                        });
-                })
-                .catch(e => {
-                    reject(e);
-                });
-        });
+        return this._pre(data)
+            .then((validData) => {
+                validData._deleted = true;
+                return this.collection.update(validData);
+            });
     }
 
     destroy(id) {
-
-        if (id === '')
-            return Promise.resolve(null);
-        else {
-            return this.collection.deleteOne({
-                    _id: id
-                })
-                .then(result => {
-                    return result.n == 1;
-                })
-                .catch(e => {
-
-                    throw e;
-                });
-        }
+        return this.collection.deleteOne({
+            _id: ObjectId.isValid(id) ? new ObjectId(id) : {},
+            _deleted: false
+        })
+            .then((result) => {
+                return Promise.resolve(result.n === 1);
+            });
     }
 
     getSingleById(id) {
-        return new Promise((resolve, reject) => {
-            if (id === '')
-                resolve(null);
-            var query = {
-                _id: new ObjectId(id),
-                _deleted: false
-            };
-            this.getSingleByQuery(query)
-                .then(data => {
-                    resolve(data);
-                })
-                .catch(e => {
-                    reject(e);
-                });
-        });
+        var query = {
+            _id: ObjectId.isValid(id) ? new ObjectId(id) : {},
+            _deleted: false
+        };
+        return this.getSingleByQuery(query);
     }
 
     getSingleByIdOrDefault(id) {
-        return new Promise((resolve, reject) => {
-            if (id === '')
-                resolve(null);
-            var query = {
-                _id: new ObjectId(id),
-                _deleted: false
-            };
-            this.getSingleByQueryOrDefault(query)
-                .then(data => {
-                    resolve(data);
-                })
-                .catch(e => {
-                    reject(e);
-                });
-        });
+        var query = {
+            _id: ObjectId.isValid(id) ? new ObjectId(id) : {},
+            _deleted: false
+        };
+        return this.getSingleByQueryOrDefault(query);
     }
 
     getSingleByQuery(query) {
-        return new Promise((resolve, reject) => {
-            this.collection
-                .single(query)
-                .then(data => {
-                    resolve(data);
-                })
-                .catch(e => {
-                    reject(e);
-                });
-        });
+        return this.collection.single(query);
     }
 
     getSingleByQueryOrDefault(query) {
-        return new Promise((resolve, reject) => {
-            this.collection
-                .singleOrDefault(query)
-                .then(data => {
-                    resolve(data);
-                })
-                .catch(e => {
-                    reject(e);
-                });
-        });
+        return this.collection.singleOrDefault(query);
     }
 };
