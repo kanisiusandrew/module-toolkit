@@ -31,7 +31,7 @@ module.exports = class BaseManager {
             size: 20,
             order: {},
             filter: {},
-            asc: true
+            select:[]
         }, paging);
         // var start = process.hrtime();
 
