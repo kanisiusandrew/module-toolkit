@@ -137,3 +137,29 @@ it(`#07. should _deleted=true`, function(done) {
             done(e);
         });
 });
+
+it(`#08. should success when destroyed`, function(done) {
+    instanceManager.destroy(createdId)
+        .then(result => {
+            // validate.product(data);
+            result.should.be.Boolean();
+            result.should.equal(true);
+            done();
+        })
+        .catch(e => {
+            done(e);
+        });
+});
+ 
+it(`#09. should success when destroyed`, function(done) {
+    instanceManager.destroy(createdId)
+        .then(result => {
+            // validate.product(data);
+            result.should.be.Boolean();
+            result.should.equal(true);
+            done();
+        })
+        .catch(e => {
+            done(e);
+        });
+});

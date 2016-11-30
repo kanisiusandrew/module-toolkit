@@ -31,7 +31,7 @@ module.exports = class BaseManager {
             size: 20,
             order: {},
             filter: {},
-            select:[]
+            select: []
         }, paging);
         // var start = process.hrtime();
 
@@ -78,9 +78,8 @@ module.exports = class BaseManager {
 
     destroy(id) {
         return this.collection.deleteOne({
-            _id: ObjectId.isValid(id) ? new ObjectId(id) : {},
-            _deleted: false
-        })
+                _id: ObjectId.isValid(id) ? new ObjectId(id) : {}
+            })
             .then((result) => {
                 return Promise.resolve(result.n === 1);
             });
