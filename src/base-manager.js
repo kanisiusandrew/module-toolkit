@@ -12,6 +12,9 @@ module.exports = class BaseManager {
         this.collection = null;
     }
 
+    _beforeInsert(data) {
+        return Promise.resolve(data);
+    }
     _validate(data) {
         throw new Error("_validate(data) not implemented");
     }
@@ -57,7 +60,10 @@ module.exports = class BaseManager {
     create(data) {
         return this._pre(data)
             .then((validData) => {
-                return this.collection.insert(validData);
+                return this._beforeInsert(validData);
+            })
+            .then((processedData) => {
+                return this.collection.insert(processedData);
             });
     }
 
