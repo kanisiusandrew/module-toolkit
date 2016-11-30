@@ -81,7 +81,7 @@ module.exports = class BaseManager {
                 _id: ObjectId.isValid(id) ? new ObjectId(id) : {}
             })
             .then((result) => {
-                return Promise.resolve(result.n === 1);
+                return Promise.resolve(result.deletedCount === 1);
             });
     }
 
