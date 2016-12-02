@@ -13,46 +13,46 @@ module.exports = class TestManager extends BaseManager {
         this.collection = this.db.use(collectionName);
     }
 
-    _createIndexes() {
-        var dateIndex = {
-            name: `ix_${collectionName}__updatedDate`,
-            key: {
-                _updatedDate: -1
-            }
-        };
+    // _createIndexes() {
+    //     var dateIndex = {
+    //         name: `ix_${collectionName}__updatedDate`,
+    //         key: {
+    //             _updatedDate: -1
+    //         }
+    //     };
 
-        return this.collection.createIndexes([dateIndex]);
-    }
+    //     return this.collection.createIndexes([dateIndex]);
+    // }
 
-    _getQuery(_paging) {
-        var basicFilter = {
-                _deleted: false
-            },
-            keywordFilter = {};
+    // _getQuery(_paging) {
+    //     var basicFilter = {
+    //             _deleted: false
+    //         },
+    //         keywordFilter = {};
 
-        var query = {};
+    //     var query = {};
 
-        if (_paging.keyword) {
-            var regex = new RegExp(_paging.keyword, "i");
-            var filterString = {
-                "string": {
-                    "$regex": regex
-                }
-            };
-            keywordFilter = {
-                "$or": [filterString]
-            };
+    //     if (_paging.keyword) {
+    //         var regex = new RegExp(_paging.keyword, "i");
+    //         var filterString = {
+    //             "string": {
+    //                 "$regex": regex
+    //             }
+    //         };
+    //         keywordFilter = {
+    //             "$or": [filterString]
+    //         };
 
-        }
-        query = {
-            "$and": [basicFilter, _paging.filter || {}, keywordFilter]
-        };
-        return query;
-    }
+    //     }
+    //     query = {
+    //         "$and": [basicFilter, _paging.filter || {}, keywordFilter]
+    //     };
+    //     return query;
+    // }
 
-    _validate(project) { 
-        var valid = new Project(project);
-        valid.stamp("tester", "manager");
-        return Promise.resolve(valid);
-    }
+    // _validate(project) { 
+    //     var valid = new Project(project);
+    //     valid.stamp("tester", "manager");
+    //     return Promise.resolve(valid);
+    // }
 };
