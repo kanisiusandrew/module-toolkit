@@ -1,10 +1,10 @@
 "use strict";
 
-var ObjectId = require("mongodb").ObjectId;
+// var ObjectId = require("mongodb").ObjectId;
 require("mongodb-toolkit");
 var BaseManager = require("../src/base-manager");
-var ValidationError = require("../src/base-manager");
-var Project = require("./test-model");
+// var ValidationError = require("../src/base-manager");
+// var Project = require("./test-model");
 
 const collectionName = "module-toolkit-test";
 module.exports = class TestManager extends BaseManager {

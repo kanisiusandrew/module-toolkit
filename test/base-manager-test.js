@@ -48,7 +48,7 @@ it("#01A. should error when create new data without overriding _validate()", fun
         .then(id => {
             done("should error when manager does not override _validate()");
         })
-        .catch(e => {
+        .catch((e) => {
             e.message.should.equal("_validate(data) not implemented");
             done();
         });
@@ -59,7 +59,7 @@ it("#01B. should error when read() without overriding _getQuery()", function(don
         .then(id => {
             done("should error when manager does not override _getQuery(paging)");
         })
-        .catch(e => {
+        .catch((e) => {
             e.message.should.equal("_getQuery(paging) not implemented");
             done();
         });
@@ -120,7 +120,7 @@ it("#01C. should success read() without overriding _createIndexes()", function(d
             should.equal(results.filter, undefined);
             done();
         })
-        .catch(e => {
+        .catch((e) => {
             done(e);
         });
 });
@@ -150,7 +150,7 @@ it("#02A. should success when create new data", function(done) {
             createdId = id;
             done();
         })
-        .catch(e => {
+        .catch((e) => {
             done(e);
         });
 });
@@ -158,24 +158,24 @@ it("#02A. should success when create new data", function(done) {
 var createdData;
 it(`#03A. should success when get created data with getSingleById(id)`, function(done) {
     instanceManager.getSingleById(createdId)
-        .then(data => {
+        .then((data) => {
             data.should.instanceof(Object);
             createdData = data;
             done();
         })
-        .catch(e => {
+        .catch((e) => {
             done(e);
         });
 });
 
 it(`#03B. should success when get created data with getSingleByIdOrDefault(id)`, function(done) {
     instanceManager.getSingleByIdOrDefault(createdId)
-        .then(data => {
+        .then((data) => {
             data.should.instanceof(Object);
             createdData = data;
             done();
         })
-        .catch(e => {
+        .catch((e) => {
             done(e);
         });
 });
@@ -184,12 +184,12 @@ it(`#03C. should success when get created data with getSingleByQuery(id)`, funct
     instanceManager.getSingleByQuery({
             _id: createdId
         })
-        .then(data => {
+        .then((data) => {
             data.should.instanceof(Object);
             createdData = data;
             done();
         })
-        .catch(e => {
+        .catch((e) => {
             done(e);
         });
 });
@@ -198,12 +198,12 @@ it(`#03D. should success when get created data with getSingleByQueryOrDefault(id
     instanceManager.getSingleByQueryOrDefault({
             _id: createdId
         })
-        .then(data => {
+        .then((data) => {
             data.should.instanceof(Object);
             createdData = data;
             done();
         })
-        .catch(e => {
+        .catch((e) => {
             done(e);
         });
 });
@@ -218,29 +218,29 @@ it(`#04A. should success when update created data`, function(done) {
             createdId.toString().should.equal(id.toString());
             done();
         })
-        .catch(e => {
+        .catch((e) => {
             done(e);
         });
 });
 
 it(`#05A. should success when get updated data with getSingleById(id)`, function(done) {
     instanceManager.getSingleById(createdId)
-        .then(data => {
+        .then((data) => {
             data.string.should.equal(createdData.string);
             done();
         })
-        .catch(e => {
+        .catch((e) => {
             done(e);
         });
 });
 
 it(`#05B. should success when get updated data with getSingleByIdOrDefault(id)`, function(done) {
     instanceManager.getSingleByIdOrDefault(createdId)
-        .then(data => {
+        .then((data) => {
             data.string.should.equal(createdData.string);
             done();
         })
-        .catch(e => {
+        .catch((e) => {
             done(e);
         });
 });
@@ -249,11 +249,11 @@ it(`#05C. should success when get updated data with getSingleByQuery(id)`, funct
     instanceManager.getSingleByQuery({
             _id: createdId
         })
-        .then(data => {
+        .then((data) => {
             data.string.should.equal(createdData.string);
             done();
         })
-        .catch(e => {
+        .catch((e) => {
             done(e);
         });
 });
@@ -262,11 +262,11 @@ it(`#05D. should success when get updated data with getSingleByQueryOrDefault(id
     instanceManager.getSingleByQueryOrDefault({
             _id: createdId
         })
-        .then(data => {
+        .then((data) => {
             data.string.should.equal(createdData.string);
             done();
         })
-        .catch(e => {
+        .catch((e) => {
             done(e);
         });
 });
@@ -279,7 +279,7 @@ it("#06A. should success when read data", function(done) {
             documents.data.should.be.instanceof(Array);
             done();
         })
-        .catch(e => {
+        .catch((e) => {
             done(e);
         });
 });
@@ -290,7 +290,7 @@ it(`#07A. should success when delete data`, function(done) {
             createdId.toString().should.equal(id.toString());
             done();
         })
-        .catch(e => {
+        .catch((e) => {
             done(e);
         });
 });
@@ -299,13 +299,13 @@ it(`#07B. should _deleted=true`, function(done) {
     instanceManager.getSingleByQuery({
             _id: createdId
         })
-        .then(data => {
+        .then((data) => {
             // validate.product(data);
             data._deleted.should.be.Boolean();
             data._deleted.should.equal(true);
             done();
         })
-        .catch(e => {
+        .catch((e) => {
             done(e);
         });
 });
@@ -318,7 +318,7 @@ it(`#08A. should success when destroyed`, function(done) {
             result.should.equal(true);
             done();
         })
-        .catch(e => {
+        .catch((e) => {
             done(e);
         });
 });
