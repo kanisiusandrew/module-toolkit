@@ -45,7 +45,7 @@ before("#000. connect db", function(done) {
 it("#01A. should error when create new data without overriding _validate()", function(done) {
     var data = {};
     instanceManager.create(data)
-        .then(id => {
+        .then((id) => {
             done("should error when manager does not override _validate()");
         })
         .catch((e) => {
@@ -56,7 +56,7 @@ it("#01A. should error when create new data without overriding _validate()", fun
 
 it("#01B. should error when read() without overriding _getQuery()", function(done) {
     instanceManager.read({})
-        .then(id => {
+        .then((id) => {
             done("should error when manager does not override _getQuery(paging)");
         })
         .catch((e) => {
@@ -103,7 +103,7 @@ it("#00A. override _getQuery(paging) & _validate(data)", function(done) {
 
 it("#01C. should success read() without overriding _createIndexes()", function(done) {
     instanceManager.read({})
-        .then(results => {
+        .then((results) => {
             results.should.have.property("data");
             results.data.should.instanceof(Array);
             results.should.have.property("count");
@@ -117,7 +117,7 @@ it("#01C. should success read() without overriding _createIndexes()", function(d
             results.should.have.property("order");
             results.order.should.instanceof(Object);
             results.should.have.property("filter");
-            should.equal(results.filter, undefined);
+            should.equal(results.filter, null);
             done();
         })
         .catch((e) => {
@@ -145,7 +145,7 @@ var createdId;
 it("#02A. should success when create new data", function(done) {
     var data = getData();
     instanceManager.create(data)
-        .then(id => {
+        .then((id) => {
             id.should.be.Object();
             createdId = id;
             done();
@@ -214,7 +214,7 @@ it(`#04A. should success when update created data`, function(done) {
     createdData.string += "[updated]";
 
     instanceManager.update(createdData)
-        .then(id => {
+        .then((id) => {
             createdId.toString().should.equal(id.toString());
             done();
         })
@@ -273,7 +273,7 @@ it(`#05D. should success when get updated data with getSingleByQueryOrDefault(id
 
 it("#06A. should success when read data", function(done) {
     instanceManager.read()
-        .then(documents => {
+        .then((documents) => {
             //process documents
             documents.should.have.property("data");
             documents.data.should.be.instanceof(Array);
@@ -286,7 +286,7 @@ it("#06A. should success when read data", function(done) {
 
 it(`#07A. should success when delete data`, function(done) {
     instanceManager.delete(createdData)
-        .then(id => {
+        .then((id) => {
             createdId.toString().should.equal(id.toString());
             done();
         })
