@@ -15,6 +15,19 @@ module.exports = class BaseManager {
     _beforeInsert(data) {
         return Promise.resolve(data);
     }
+    
+    _afterInsert(id) {
+        return Promise.resolve(id);
+    }
+    
+    _beforeUpdate(data) {
+        return Promise.resolve(data);
+    }
+    
+    _afterUpdate(id) {
+        return Promise.resolve(id);
+    }
+    
     _validate(data) {
         throw new Error("_validate(data) not implemented");
     }
@@ -64,14 +77,24 @@ module.exports = class BaseManager {
             })
             .then((processedData) => {
                 return this.collection.insert(processedData);
+            })
+            .then((id) => {
+                return this._afterInsert(id);
             });
     }
 
     update(data) {
         return this._pre(data)
+        
             .then((validData) => {
-                return this.collection.update(validData);
-            });
+                return this._beforeUpdate(validData);
+            })
+            .then((processedData) => {
+                return this.collection.update(processedData);
+            })
+            .then((id) => {
+                return this._afterUpdate(id);
+            }); 
     }
 
     delete(data) {
